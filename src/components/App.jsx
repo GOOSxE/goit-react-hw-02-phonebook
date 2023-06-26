@@ -1,7 +1,9 @@
 import React from 'react';
-import ContactForm from './Contact-form';
-import Filter from './Filter';
-import ContactsList from './Contact-list';
+import Section from './Section/Section';
+import ContactForm from './Contact-form/Contact-form';
+import Filter from './FIlter/Filter';
+import ContactsList from './Contact-list/Contact-list';
+import Notification from './Notification/Notification';
 const initialContacts = [
   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
@@ -14,10 +16,16 @@ export class App extends React.Component {
     filter: '',
   };
   onContactAdding = contactData => {
+    if (
+      this.state.contacts.find(contact => contact.name === contactData.name)
+    ) {
+      alert(`${contactData.name} is already in contacts`);
+      return;
+    }
     this.setState({ contacts: [...this.state.contacts, contactData] });
   };
+
   onContactRemoving = id => {
-    console.log(id);
     this.setState({
       contacts: this.state.contacts.filter(contact => contact.id !== id),
     });
@@ -35,18 +43,24 @@ export class App extends React.Component {
   render() {
     const filteredContacts = this.getFilteredContacts();
     return (
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm onContactAdding={this.onContactAdding}></ContactForm>
-        <Filter
-          value={this.state.filter}
-          onFilterChange={this.onFilterChange}
-        ></Filter>
-        <h2>Contacts</h2>
-        <ContactsList
-          contactsData={filteredContacts}
-          onContactRemoving={this.onContactRemoving}
-        ></ContactsList>
+      <div className="App">
+        <Section title="Phonebook">
+          <ContactForm onContactAdding={this.onContactAdding}></ContactForm>
+        </Section>
+        <Section title="Contacts">
+          <Filter
+            value={this.state.filter}
+            onFilterChange={this.onFilterChange}
+          ></Filter>
+          {this.state.contacts.length > 0 ? (
+            <ContactsList
+              contactsData={filteredContacts}
+              onContactRemoving={this.onContactRemoving}
+            ></ContactsList>
+          ) : (
+            <Notification title="There is no contacts"></Notification>
+          )}
+        </Section>
       </div>
     );
   }
