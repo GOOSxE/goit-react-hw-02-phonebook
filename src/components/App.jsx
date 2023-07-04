@@ -22,9 +22,9 @@ export class App extends React.Component {
       alert(`${contactData.name} is already in contacts`);
       return;
     }
+
     this.setState({ contacts: [...this.state.contacts, contactData] });
   };
-
   onContactRemoving = id => {
     this.setState({
       contacts: this.state.contacts.filter(contact => contact.id !== id),
@@ -65,3 +65,4 @@ export class App extends React.Component {
     );
   }
 }
+
